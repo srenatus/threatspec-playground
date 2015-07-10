@@ -16,6 +16,7 @@ var MitigationPattern = regexp.MustCompile(`Mitigates (?P<component>.+?) against
 var ExposurePattern = regexp.MustCompile(`Exposes (?P<component>.+?) to (?P<threat>.+?) with (?P<exposure>.+?)\s*(?:\((?P<ref>.*?)\))?`)
 var DoesPattern = regexp.MustCompile(`Does (?P<action>.+?) for (?P<component>.+?)\s*(?:\((?P<ref>.*?)\))?$`)
 
+// TODO: account for number of captures (not always == 3)
 func iff(b bool, sth []string) []string {
 	if b {
 		return sth[1:]
@@ -26,14 +27,8 @@ func iff(b bool, sth []string) []string {
 
 func getTSpec(cs []*ast.CommentGroup) []string {
 	r := []string{}
-	var t []string
-	foundt := false
-	var m []string
-	foundm := false
-	var e []string
-	founde := false
-	var d []string
-	foundd := false
+	var t, m, e, d []string
+	var foundt, foundm, founde, foundd = false, false, false, false
 
 	for _, lines := range cs { // each comment group
 		for _, line := range strings.Split(lines.Text(), "\n") { // each comment line
@@ -96,5 +91,6 @@ func main() {
 		})
 
 	}
+
 	writer.Flush()
 }
