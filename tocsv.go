@@ -1,4 +1,4 @@
-package main
+package tocsv
 
 import (
 	"encoding/csv"
