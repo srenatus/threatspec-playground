@@ -11,10 +11,10 @@ import (
 	"strings"
 )
 
-var ThreatSpecPattern = regexp.MustCompile(`ThreatSpec (?P<model>.+?) for (?P<function>.+?)$`)
-var MitigationPattern = regexp.MustCompile(`Mitigates (?P<component>.+?) against (?P<threat>.+?) with (?P<mitigation>.+?)\s*(?:\((?P<ref>.*?)\))?$`)
-var ExposurePattern = regexp.MustCompile(`Exposes (?P<component>.+?) to (?P<threat>.+?) with (?P<exposure>.+?)\s*(?:\((?P<ref>.*?)\))?`)
-var DoesPattern = regexp.MustCompile(`Does (?P<action>.+?) for (?P<component>.+?)\s*(?:\((?P<ref>.*?)\))?$`)
+var ThreatSpecPattern = regexp.MustCompile(`ThreatSpec (?P<Model>.+?) for (?P<Function>.+?)$`)
+var MitigationPattern = regexp.MustCompile(`Mitigates (?P<Component>.+?) against (?P<Threat>.+?) with (?P<Mitigation>.+?)\s*(?:\((?P<Ref>.*?)\))?$`)
+var ExposurePattern = regexp.MustCompile(`Exposes (?P<Component>.+?) to (?P<Threat>.+?) with (?P<Exposure>.+?)\s*(?:\((?P<Ref>.*?)\))?`)
+var DoesPattern = regexp.MustCompile(`Does (?P<Action>.+?) for (?P<Component>.+?)\s*(?:\((?P<Ref>.*?)\))?$`)
 var res = []*regexp.Regexp{ThreatSpecPattern, MitigationPattern, ExposurePattern, DoesPattern}
 
 type Function struct {
@@ -43,8 +43,7 @@ func (f *Function) getTSpec(cs []*ast.CommentGroup) {
 						if i == 0 {
 							continue
 						}
-						// RE named capture "component" -> f.Component, etc
-						reflect.ValueOf(f).Elem().FieldByNameFunc(func(fi string) bool { return strings.ToLower(fi) == field }).SetString(m[i])
+						reflect.ValueOf(f).Elem().FieldByName(field).SetString(m[i])
 					}
 				}
 			}
